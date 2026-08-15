@@ -14,7 +14,9 @@
     "migrate": "npm run migrate --prefix server",
     "seed": "npm run seed --prefix server",
     "test": "npm test --prefix server",
-    "typecheck": "npm run typecheck --prefix server && npm run typecheck --prefix mobile"
+    "typecheck": "npm run typecheck --prefix server && npm run typecheck --prefix mobile",
+    "qr": "./qr.sh",
+    "dev:tunnel": "npm start --prefix mobile -- --tunnel"
   },
   "engines": {
     "node": ">=20"
