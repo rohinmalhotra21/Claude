@@ -5,7 +5,7 @@
   "description": "Coaching app for personal trainers and their clients, with a Power BI analytics layer",
   "scripts": {
     "setup": "./setup.sh",
-    "dev": "concurrently -n api,app -c green,cyan \"npm run dev --prefix server\" \"npm start --prefix mobile\"",
+    "dev": "./dev.sh",
     "dev:api": "npm run dev --prefix server",
     "dev:app": "npm start --prefix mobile",
     "db:up": "docker compose up -d db",
@@ -15,9 +15,6 @@
     "seed": "npm run seed --prefix server",
     "test": "npm test --prefix server",
     "typecheck": "npm run typecheck --prefix server && npm run typecheck --prefix mobile"
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.1"
   },
   "engines": {
     "node": ">=20"

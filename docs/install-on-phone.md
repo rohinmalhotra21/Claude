@@ -170,10 +170,16 @@ EXPO_OFFLINE=1 npm run dev
 
 Nothing is wrong with the app — only the version check is unavailable.
 
-**`concurrently: not found` when running `npm run dev`**
+**No QR code appears**
 
-Root dependencies weren't installed. `./setup.sh` does this, or run `npm install`
-in the repo root.
+Expo only draws the QR code when it owns a real terminal. Running it through an
+output multiplexer hides it silently. `npm run dev` keeps Expo attached to the
+terminal for exactly this reason — if you have wrapped it in something else, run
+`npm run dev:app` in its own terminal instead.
+
+If the QR has scrolled off, press `r` to reload or just resize the window; Expo
+redraws it. The `exp://192.168.x.x:8081` URL printed above the QR can also be
+typed straight into Expo Go.
 
 **The app loads but every request fails**
 

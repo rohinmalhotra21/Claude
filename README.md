@@ -39,11 +39,15 @@ schema change.
 Requires Node 20+, and Docker for the database (or your own Postgres 14+).
 
 ```bash
-./setup.sh      # starts Postgres, migrates, seeds demo data, installs both packages
-npm run dev     # API on :4000, Expo bundler alongside it
+./setup.sh      # starts Postgres, migrates, seeds demo data, installs dependencies
+npm run dev     # API on :4000, Expo alongside it — QR code appears in the terminal
 ```
 
-Then press `w` for the browser, or scan the QR code with Expo Go on your phone.
+Scan the QR code with Expo Go on your phone, or press `w` for the browser.
+
+`dev.sh` deliberately runs Expo in the foreground rather than multiplexing both
+processes: Expo only renders the QR code and its key menu when attached to a real
+terminal, so piping its output hides them.
 
 Already have a Postgres you'd rather use? Point at it and run the same script:
 
