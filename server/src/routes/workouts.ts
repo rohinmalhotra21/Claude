@@ -64,7 +64,7 @@ const sessionSchema = z.object({
  * grouped set sent without a key gets a group of its own so the DB constraint
  * still holds.
  */
-function assignGroups(sets: z.infer<typeof setSchema>[]) {
+export function assignGroups(sets: z.infer<typeof setSchema>[]) {
   const groupIds = new Map<string, string>();
   const groupCounts = new Map<string, number>();
 
