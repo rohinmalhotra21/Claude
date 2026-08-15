@@ -1,8 +1,8 @@
 {
-  "name": "fittrack-server",
+  "name": "trainwithrohin-server",
   "version": "1.0.0",
   "private": true,
-  "description": "API and analytics backend for the FitTrack coaching app",
+  "description": "API and analytics backend for the Train With Rohin coaching app",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

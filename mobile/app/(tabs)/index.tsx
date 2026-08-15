@@ -10,6 +10,7 @@ import { colors, radius, spacing, typography, TECHNIQUE_LABELS } from '../../src
 import { Card, ErrorBanner, Loading, Metric, SectionTitle, Tag } from '../../src/components/ui';
 import { BarList, ColumnChart, LineChart } from '../../src/components/charts';
 import { ClientBanner, NoClientSelected } from '../../src/components/ClientBanner';
+import { Monogram } from '../../src/brand/BrandLogo';
 import type { Overview } from '../../src/types';
 
 export default function HomeScreen() {
@@ -36,9 +37,10 @@ export default function HomeScreen() {
         }
       >
         <View style={styles.header}>
+          <Monogram size={52} />
           <View style={{ flex: 1 }}>
             <Text style={typography.label}>
-              {isTrainer ? 'Coach' : 'Welcome back'}
+              {isTrainer ? 'COACH' : 'WELCOME BACK'}
             </Text>
             <Text style={typography.title} numberOfLines={1}>
               {user?.fullName ?? ''}

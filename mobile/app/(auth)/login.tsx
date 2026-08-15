@@ -3,8 +3,9 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import { Link } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../src/lib/auth';
+import { BrandLogo } from '../../src/brand/BrandLogo';
 import { Button, ErrorBanner, Field } from '../../src/components/ui';
-import { colors, spacing, typography } from '../../src/lib/theme';
+import { colors, spacing } from '../../src/lib/theme';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -33,8 +34,7 @@ export default function LoginScreen() {
       >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <View style={styles.header}>
-            <Text style={styles.logo}>FitTrack</Text>
-            <Text style={typography.label}>Coaching, tracked properly.</Text>
+            <BrandLogo width={280} />
           </View>
 
           <ErrorBanner message={error} />
@@ -77,8 +77,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.xl, flexGrow: 1, justifyContent: 'center' },
-  header: { alignItems: 'center', marginBottom: spacing.xxl, gap: spacing.xs },
-  logo: { fontSize: 40, fontWeight: '800', color: colors.accent, letterSpacing: -1 },
+  header: { alignItems: 'center', marginBottom: spacing.xxl },
   links: { marginTop: spacing.xl, gap: spacing.md, alignItems: 'center' },
   link: { color: colors.textMuted, fontSize: 14 },
 });

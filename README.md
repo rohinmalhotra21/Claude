@@ -1,4 +1,4 @@
-# FitTrack
+# Train With Rohin
 
 A coaching app for personal trainers and their clients, with a Power BI
 analytics layer on top.
@@ -48,7 +48,7 @@ Then press `w` for the browser, or scan the QR code with Expo Go on your phone.
 Already have a Postgres you'd rather use? Point at it and run the same script:
 
 ```bash
-export DATABASE_URL=postgres://user:pass@localhost:5432/fittrack
+export DATABASE_URL=postgres://user:pass@localhost:5432/trainwithrohin
 ./setup.sh
 ```
 
@@ -56,8 +56,8 @@ The app infers the API address from the Expo dev host, so it works on a real
 phone over the LAN without configuration. To point it elsewhere, set
 `EXPO_PUBLIC_API_URL`.
 
-Seed logins are `coach@fittrack.app` (trainer), `alex@fittrack.app` and
-`priya@fittrack.app` (clients), all with password `password123`.
+Seed logins are `coach@trainwithrohin.com` (trainer), `alex@trainwithrohin.com` and
+`priya@trainwithrohin.com` (clients), all with password `password123`.
 
 Other useful scripts:
 
@@ -128,3 +128,30 @@ DAX for volume, estimated 1RM, macro adherence and weight change.
   multiple trainers ever share one Power BI workspace.
 - The seeded food and supplement catalogs are small starter sets, not a
   nutritional database.
+
+## Branding
+
+The identity is black, gold and white, taken from the Train With Rohin logo.
+
+The TR monogram lives in `mobile/src/brand/logo.ts` as vector artwork, so the
+app icon, splash screen and in-app logo all come from one definition and stay
+sharp at any size. `<BrandLogo>` composes it with the wordmark and tagline as
+real text nodes rather than SVG text, because font metrics differ across iOS,
+Android and the browser used to generate the launcher assets.
+
+To use the original artwork instead, save it as `mobile/assets/logo.png` — the
+logo component prefers that file when it exists, with no code change. Then
+regenerate the launcher assets:
+
+```bash
+cd mobile
+npx playwright@latest install chromium
+node scripts/generate-brand-assets.mjs
+```
+
+The four module colours (workouts, diet, supplementation, daily log) were
+validated against the app's black surface for lightness, chroma, colour-blind
+separation and contrast rather than picked by eye. Brand gold sits deliberately
+brighter than a strict chart-series band allows: it is the identity colour, and
+every chart in the app is single-series, so nothing depends on it being
+weight-matched to another hue.

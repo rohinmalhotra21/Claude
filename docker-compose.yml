@@ -1,22 +1,22 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: fittrack-db
+    container_name: trainwithrohin-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fittrack
+      POSTGRES_DB: trainwithrohin
     ports:
       - '5432:5432'
     volumes:
-      - fittrack-pgdata:/var/lib/postgresql/data
+      - trainwithrohin-pgdata:/var/lib/postgresql/data
     healthcheck:
       # The API's migrate step waits on this, so it has to mean "accepting
       # queries", not just "process started".
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d fittrack']
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d trainwithrohin']
       interval: 3s
       timeout: 5s
       retries: 20
 
 volumes:
-  fittrack-pgdata:
+  trainwithrohin-pgdata:

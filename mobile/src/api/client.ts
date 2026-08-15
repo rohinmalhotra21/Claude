@@ -20,7 +20,7 @@ function resolveBaseUrl(): string {
 
 export const API_BASE_URL = resolveBaseUrl();
 
-const TOKEN_KEY = 'fittrack.token';
+const TOKEN_KEY = 'twr.token';
 
 let cachedToken: string | null = null;
 

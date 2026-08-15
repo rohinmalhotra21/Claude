@@ -99,7 +99,7 @@ async function seed(): Promise<void> {
     // --- Reset demo accounts -------------------------------------------------
     await db.query(
       `DELETE FROM users WHERE email IN
-       ('coach@fittrack.app', 'alex@fittrack.app', 'priya@fittrack.app')`,
+       ('coach@trainwithrohin.com', 'alex@trainwithrohin.com', 'priya@trainwithrohin.com')`,
     );
 
     // --- Catalog (global rows, shared by everyone) --------------------------
@@ -137,15 +137,15 @@ async function seed(): Promise<void> {
     // --- People -------------------------------------------------------------
     const trainer = await db.query<{ id: string }>(
       `INSERT INTO users (email, password_hash, full_name, role)
-       VALUES ('coach@fittrack.app', $1, 'Sam Rivera', 'trainer') RETURNING id`,
+       VALUES ('coach@trainwithrohin.com', $1, 'Sam Rivera', 'trainer') RETURNING id`,
       [hash],
     );
     const trainerId = trainer.rows[0]!.id;
 
     const clients: { id: string; name: string; startWeight: number; kcal: number }[] = [];
     for (const [email, name, dob, height, sex, goal, startWeight, kcal] of [
-      ['alex@fittrack.app', 'Alex Chen', '1994-03-11', 178, 'male', 'Lean bulk to 82 kg', 76.4, 2900],
-      ['priya@fittrack.app', 'Priya Nair', '1991-08-27', 165, 'female', 'Fat loss, keep strength', 68.2, 1950],
+      ['alex@trainwithrohin.com', 'Alex Chen', '1994-03-11', 178, 'male', 'Lean bulk to 82 kg', 76.4, 2900],
+      ['priya@trainwithrohin.com', 'Priya Nair', '1991-08-27', 165, 'female', 'Fat loss, keep strength', 68.2, 1950],
     ] as const) {
       const created = await db.query<{ id: string }>(
         `INSERT INTO users (email, password_hash, full_name, role, trainer_id,
@@ -516,8 +516,8 @@ async function seed(): Promise<void> {
     }
 
     console.log('Seeded demo data:');
-    console.log('  trainer  coach@fittrack.app / password123');
-    console.log('  clients  alex@fittrack.app, priya@fittrack.app / password123');
+    console.log('  trainer  coach@trainwithrohin.com / password123');
+    console.log('  clients  alex@trainwithrohin.com, priya@trainwithrohin.com / password123');
   });
 }
 

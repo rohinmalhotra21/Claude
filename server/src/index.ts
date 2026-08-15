@@ -5,7 +5,7 @@ import { pool } from './db/pool.js';
 const app = createApp();
 
 const server = app.listen(env.port, () => {
-  console.log(`FitTrack API listening on http://localhost:${env.port}`);
+  console.log(`Train With Rohin API listening on http://localhost:${env.port}`);
 });
 
 async function shutdown(signal: string): Promise<void> {

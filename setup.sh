@@ -35,7 +35,7 @@ elif docker compose version >/dev/null 2>&1; then
 
   printf 'Waiting for the database'
   for _ in $(seq 1 40); do
-    if docker compose exec -T db pg_isready -U postgres -d fittrack >/dev/null 2>&1; then
+    if docker compose exec -T db pg_isready -U postgres -d trainwithrohin >/dev/null 2>&1; then
       printf '\n'
       green "Database ready."
       break
@@ -44,12 +44,12 @@ elif docker compose version >/dev/null 2>&1; then
     sleep 1
   done
 
-  export DATABASE_URL="postgres://postgres:postgres@localhost:5432/fittrack"
+  export DATABASE_URL="postgres://postgres:postgres@localhost:5432/trainwithrohin"
 else
   red "Docker isn't available and DATABASE_URL isn't set."
   echo
   echo "Either install Docker Desktop, or point at your own Postgres:"
-  echo "  export DATABASE_URL=postgres://user:pass@localhost:5432/fittrack"
+  echo "  export DATABASE_URL=postgres://user:pass@localhost:5432/trainwithrohin"
   echo "  ./setup.sh"
   exit 1
 fi
@@ -94,9 +94,9 @@ cat <<'EOF'
   code with Expo Go on your phone.
 
   Sign in with:
-    coach@fittrack.app   (trainer, 2 clients)
-    alex@fittrack.app    (client, lean bulk)
-    priya@fittrack.app   (client, fat loss)
+    coach@trainwithrohin.com   (trainer, 2 clients)
+    alex@trainwithrohin.com    (client, lean bulk)
+    priya@trainwithrohin.com   (client, fat loss)
   Password for all three: password123
 ──────────────────────────────────────────────
 EOF

@@ -29,7 +29,7 @@ ALTER ROLE powerbi_reader WITH PASSWORD 'a-strong-password';
 ### Connect
 
 1. Power BI Desktop → **Get Data** → **PostgreSQL database**
-2. Server `your-host:5432`, Database `fittrack`
+2. Server `your-host:5432`, Database `trainwithrohin`
 3. Data Connectivity mode → **DirectQuery**
 4. Sign in as `powerbi_reader`
 5. Load these views:

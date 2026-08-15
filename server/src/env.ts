@@ -15,7 +15,7 @@ export const env = {
   port: Number(process.env.PORT ?? 4000),
   databaseUrl: required(
     'DATABASE_URL',
-    isProduction ? undefined : 'postgres://postgres:postgres@localhost:5432/fittrack',
+    isProduction ? undefined : 'postgres://postgres:postgres@localhost:5432/trainwithrohin',
   ),
   // A weak default is fine locally but must never reach production.
   jwtSecret: required('JWT_SECRET', isProduction ? undefined : 'dev-only-insecure-secret'),

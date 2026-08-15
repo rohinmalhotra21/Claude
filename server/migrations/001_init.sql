@@ -1,4 +1,4 @@
--- FitTrack schema
+-- Train With Rohin schema
 -- Postgres 14+. Designed so Power BI can DirectQuery the vw_* views directly.
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
