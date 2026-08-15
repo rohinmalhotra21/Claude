@@ -1,0 +1,26 @@
+{
+  "name": "Train With Rohin",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+
+  // Postgres runs via docker-compose, so the container needs a Docker daemon.
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  // 4000 = API, 8081 = Expo web. Both are forwarded with public URLs so a phone
+  // can open them without signing in to GitHub.
+  "forwardPorts": [4000, 8081],
+  "portsAttributes": {
+    "4000": { "label": "API", "visibility": "public", "onAutoForward": "silent" },
+    "8081": { "label": "App", "visibility": "public", "onAutoForward": "silent" }
+  },
+
+  "postCreateCommand": "bash ./setup.sh",
+  "waitFor": "postCreateCommand",
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  }
+}
