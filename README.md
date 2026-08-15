@@ -36,29 +36,37 @@ schema change.
 
 ## Running it
 
-Requires Node 20+ and Postgres 14+.
+Requires Node 20+, and Docker for the database (or your own Postgres 14+).
 
 ```bash
-# API
-cd server
-cp .env.example .env          # set DATABASE_URL and JWT_SECRET
-npm install
-npm run migrate
-npm run seed                  # optional: demo trainer, 2 clients, 8 weeks of history
-npm run dev                   # http://localhost:4000
+./setup.sh      # starts Postgres, migrates, seeds demo data, installs both packages
+npm run dev     # API on :4000, Expo bundler alongside it
+```
 
-# App
-cd mobile
-npm install
-npm start                     # scan the QR code with Expo Go
+Then press `w` for the browser, or scan the QR code with Expo Go on your phone.
+
+Already have a Postgres you'd rather use? Point at it and run the same script:
+
+```bash
+export DATABASE_URL=postgres://user:pass@localhost:5432/fittrack
+./setup.sh
 ```
 
 The app infers the API address from the Expo dev host, so it works on a real
 phone over the LAN without configuration. To point it elsewhere, set
 `EXPO_PUBLIC_API_URL`.
 
-Seed logins are `coach@fittrack.app`, `alex@fittrack.app` and
-`priya@fittrack.app`, all with password `password123`.
+Seed logins are `coach@fittrack.app` (trainer), `alex@fittrack.app` and
+`priya@fittrack.app` (clients), all with password `password123`.
+
+Other useful scripts:
+
+| Command | Does |
+|---|---|
+| `npm run dev:api` · `npm run dev:app` | run either half on its own |
+| `npm run db:reset` | drop the volume, re-migrate, re-seed |
+| `npm test` | unit tests for the set-grouping logic |
+| `npm run typecheck` | typecheck both packages |
 
 ## Roles
 
