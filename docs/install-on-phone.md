@@ -153,3 +153,31 @@ cd android
 This needs roughly 10 GB of SDK and toolchain, and a signing key for anything
 you intend to distribute. EAS is less work unless you specifically want an
 offline build.
+
+---
+
+## Troubleshooting
+
+**`expo start` exits with `SyntaxError: Unexpected token 'H', "Host not i"...`**
+
+The Expo CLI checks your dependency versions against `api.expo.dev` on startup.
+On a restricted or proxied network that request is blocked, and the CLI fails to
+parse the error page. Skip the check:
+
+```bash
+EXPO_OFFLINE=1 npm run dev
+```
+
+Nothing is wrong with the app — only the version check is unavailable.
+
+**`concurrently: not found` when running `npm run dev`**
+
+Root dependencies weren't installed. `./setup.sh` does this, or run `npm install`
+in the repo root.
+
+**The app loads but every request fails**
+
+The API address is wrong or unreachable. In Expo Go, check the phone and laptop
+share a Wi-Fi network. In a built APK, check the `EXPO_PUBLIC_API_URL` compiled
+into it, and remember an `http://` address needs the cleartext allowance that
+`app.config.js` sets automatically.

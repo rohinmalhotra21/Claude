@@ -54,6 +54,13 @@ else
   exit 1
 fi
 
+# --- Root ---------------------------------------------------------------------
+# `npm run dev` runs the API and the app together via concurrently, which lives
+# in the root package. Without this, setup succeeds and then dev fails with
+# "concurrently: not found".
+green "Installing root dependencies..."
+npm install --no-fund --no-audit --loglevel=error
+
 # --- Server -------------------------------------------------------------------
 green "Installing API dependencies..."
 (cd server && npm install --no-fund --no-audit --loglevel=error)
