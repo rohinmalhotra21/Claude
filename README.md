@@ -68,6 +68,29 @@ Other useful scripts:
 | `npm test` | unit tests for the set-grouping logic |
 | `npm run typecheck` | typecheck both packages |
 
+## Installing on a phone
+
+Expo Go is the zero-build way to try it. For a real installable app:
+
+```bash
+npm install -g eas-cli && eas login
+cd mobile && eas build:configure
+# set the preview profile's EXPO_PUBLIC_API_URL in mobile/eas.json first
+npm run build:apk
+```
+
+Expo's cloud builders return a download link for the APK — no Android Studio or
+Android SDK needed locally.
+
+An installed app can't reach `localhost`, so the build has to be pointed at an
+API it can actually see: your laptop's LAN address for testing, or a deployed
+HTTPS URL for real clients. `app.config.js` reads that URL and allows Android
+cleartext traffic only when it is plain `http://`, because Android 9+ otherwise
+blocks the connection with an unhelpful error.
+
+Full walkthrough, including iOS and store distribution:
+[docs/install-on-phone.md](docs/install-on-phone.md).
+
 ## Roles
 
 A trainer signs up directly, then generates single-use invite codes from the
