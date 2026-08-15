@@ -1,0 +1,25 @@
+{
+  "name": "fittrack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Coaching app for personal trainers and their clients, with a Power BI analytics layer",
+  "scripts": {
+    "setup": "./setup.sh",
+    "dev": "concurrently -n api,app -c green,cyan \"npm run dev --prefix server\" \"npm start --prefix mobile\"",
+    "dev:api": "npm run dev --prefix server",
+    "dev:app": "npm start --prefix mobile",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d db && sleep 5 && npm run migrate && npm run seed",
+    "migrate": "npm run migrate --prefix server",
+    "seed": "npm run seed --prefix server",
+    "test": "npm test --prefix server",
+    "typecheck": "npm run typecheck --prefix server && npm run typecheck --prefix mobile"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
