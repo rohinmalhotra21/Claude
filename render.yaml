@@ -1,0 +1,26 @@
+# One-click API + database deploy, so a built APK has something to talk to.
+# On Render: New → Blueprint → point at this repo.
+services:
+  - type: web
+    name: trainwithrohin-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run migrate:prod && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trainwithrohin-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: '*'
+      - key: NODE_VERSION
+        value: '20'
+
+databases:
+  - name: trainwithrohin-db
+    plan: free

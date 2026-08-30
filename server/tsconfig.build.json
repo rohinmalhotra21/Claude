@@ -1,0 +1,12 @@
+{
+  // Build config: only src, so the output is dist/index.js rather than
+  // dist/src/index.js. tsconfig.json also includes test/ for typechecking,
+  // which would otherwise widen rootDir and nest the output a level deeper.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "test"]
+}
