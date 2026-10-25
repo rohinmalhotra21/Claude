@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { query, queryOne, transaction } from '../db/pool.js';
 import { ApiError, asyncHandler } from '../middleware/error.js';
 import { authenticate, resolveTargetUserId } from '../middleware/auth.js';
-import { pushAsync } from '../services/powerbiPush.js';
 
 export const dietRouter = Router();
 dietRouter.use(authenticate);
@@ -172,7 +171,6 @@ dietRouter.post(
       return { id: mealId, mealIndex };
     });
 
-    await pushDailyNutrition(userId, body.eatenOn);
     res.status(201).json({ meal });
   }),
 );
@@ -204,7 +202,6 @@ dietRouter.post(
       [mealId, body.foodId, body.quantity],
     );
 
-    await pushDailyNutrition(userId, eatenOn);
     res.status(201).json({ item });
   }),
 );
@@ -223,7 +220,6 @@ dietRouter.delete(
     ]);
     if (deleted.length === 0) throw new ApiError(404, 'Item not found');
 
-    await pushDailyNutrition(userId, eatenOn);
     res.status(204).send();
   }),
 );
@@ -237,7 +233,6 @@ dietRouter.delete(
     const eatenOn = await assertMealOwned(mealId, userId);
     await query('DELETE FROM meals WHERE id = $1', [mealId]);
 
-    await pushDailyNutrition(userId, eatenOn);
     res.status(204).send();
   }),
 );
@@ -291,32 +286,3 @@ dietRouter.put(
     res.json({ target });
   }),
 );
-
-/** Recomputes the day's totals and streams them to Power BI. */
-async function pushDailyNutrition(userId: string, date: string): Promise<void> {
-  const totals = await queryOne<{
-    client_name: string;
-    kcal: string;
-    protein_g: string;
-    carbs_g: string;
-    fat_g: string;
-  }>(
-    `SELECT client_name, kcal, protein_g, carbs_g, fat_g
-     FROM vw_fact_nutrition_daily WHERE client_id = $1 AND date_key = $2`,
-    [userId, date],
-  );
-  if (!totals) return;
-
-  pushAsync('nutrition', [
-    {
-      client_id: userId,
-      client_name: totals.client_name,
-      date,
-      kcal: Number(totals.kcal),
-      protein_g: Number(totals.protein_g),
-      carbs_g: Number(totals.carbs_g),
-      fat_g: Number(totals.fat_g),
-      logged_at: new Date().toISOString(),
-    },
-  ]);
-}

@@ -11,7 +11,6 @@ import { dietRouter } from './routes/diet.js';
 import { supplementsRouter } from './routes/supplements.js';
 import { dailyLogRouter } from './routes/dailyLog.js';
 import { analyticsRouter } from './routes/analytics.js';
-import { powerbiRouter } from './routes/powerbi.js';
 import { pool } from './db/pool.js';
 
 export function createApp() {
@@ -42,7 +41,6 @@ export function createApp() {
   app.use('/api/supplements', supplementsRouter);
   app.use('/api/daily-log', dailyLogRouter);
   app.use('/api/analytics', analyticsRouter);
-  app.use('/api/powerbi', powerbiRouter);
 
   app.use(notFound);
   app.use(errorHandler);

@@ -56,6 +56,12 @@ module.exports = {
       output: 'single',
       favicon: './assets/favicon.png',
     },
+    // GitHub Pages serves a project site from /<repo>/, not the domain root, so
+    // the web build needs that prefix baked into its asset URLs. Unset for every
+    // other target, where the app is served from /.
+    experiments: process.env.EXPO_BASE_URL
+      ? { baseUrl: process.env.EXPO_BASE_URL }
+      : undefined,
     plugins: [
       'expo-router',
       [

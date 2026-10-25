@@ -1,18 +1,18 @@
 -- Analytics layer.
 --
--- These views are the contract Power BI binds to. The app writes to the base
--- tables above; Power BI reads only from the vw_* views here, so the physical
--- schema can change without breaking published reports.
+-- The app writes to the base tables above and reads its dashboards from the
+-- vw_* views here, so the rollup logic lives in one place rather than being
+-- restated in each endpoint.
 --
 -- Every fact view exposes client_id / client_name / trainer_id and a date column
--- so the report can filter by client and join to dim_date.
+-- so a dashboard can filter by client and join to vw_dim_date.
 
 -- ---------------------------------------------------------------------------
 -- Dimensions
 -- ---------------------------------------------------------------------------
 
--- A contiguous calendar. Power BI needs a gapless date table to make time
--- intelligence (MTD, rolling averages, period-over-period) behave.
+-- A contiguous calendar, so a day with nothing logged still appears in a
+-- trend rather than being silently skipped.
 CREATE OR REPLACE VIEW vw_dim_date AS
 SELECT
   d::date                                        AS date_key,

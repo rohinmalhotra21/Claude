@@ -1,6 +1,6 @@
 /**
  * Seeds the catalog plus a demo trainer with two clients and ~8 weeks of
- * history, so the Power BI report has something to render on first open.
+ * history, so the dashboards have something to render on first open.
  *
  * Safe to re-run: it clears demo users and their cascaded data first.
  */

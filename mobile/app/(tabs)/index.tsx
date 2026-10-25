@@ -188,8 +188,8 @@ export default function HomeScreen() {
 
             <Text style={[typography.caption, { textAlign: 'center', marginTop: spacing.sm }]}>
               {activeClient
-                ? `Full history and cross-client reporting live in Power BI.`
-                : `Deeper breakdowns live in your trainer's Power BI dashboard.`}
+                ? `Showing ${activeClient.full_name}'s last ${data?.days ?? 30} days.`
+                : `Pull down to refresh.`}
             </Text>
           </>
         )}

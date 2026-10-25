@@ -1,0 +1,74 @@
+# Publishes the Expo web build to GitHub Pages, giving the app a public URL.
+#
+# Before the first run:
+#   Settings → Pages → Source: GitHub Actions
+#   Settings → Secrets and variables → Actions → Variables → New:
+#     API_URL = https://your-api.onrender.com
+#
+# Without API_URL the page still loads, but every request fails: the app is a
+# client and needs the API deployed somewhere reachable.
+name: Deploy web app
+
+on:
+  push:
+    branches: [claude/new-session-xwrugi, main]
+    paths: ['mobile/**', '.github/workflows/deploy-web.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install
+        working-directory: mobile
+        run: npm ci
+
+      - name: Export web build
+        working-directory: mobile
+        env:
+          EXPO_PUBLIC_API_URL: ${{ vars.API_URL }}
+          # Project sites live at /<repo>/, so assets need that prefix.
+          EXPO_BASE_URL: /${{ github.event.repository.name }}
+          EXPO_OFFLINE: '1'
+        run: npx expo export --platform web --output-dir dist
+
+      - name: Prepare for Pages
+        working-directory: mobile/dist
+        run: |
+          # Pages would otherwise run Jekyll and drop _expo/.
+          touch .nojekyll
+          # expo-router ships a single-page app; Pages needs a 404 fallback so
+          # a refresh on /workouts does not 404.
+          cp index.html 404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: mobile/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

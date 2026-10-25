@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { query, queryOne, transaction } from '../db/pool.js';
 import { ApiError, asyncHandler } from '../middleware/error.js';
 import { authenticate, resolveTargetUserId } from '../middleware/auth.js';
-import { pushAsync } from '../services/powerbiPush.js';
 
 export const workoutsRouter = Router();
 workoutsRouter.use(authenticate);
@@ -222,17 +221,6 @@ workoutsRouter.post(
        FROM vw_fact_workout_sessions WHERE session_id = $1`,
       [sessionId],
     );
-
-    pushAsync('workouts', [
-      {
-        client_id: userId,
-        client_name: (summary as { client_name?: string } | undefined)?.client_name ?? '',
-        date: body.performedOn,
-        total_volume_kg: Number((summary as { total_volume_kg?: string })?.total_volume_kg ?? 0),
-        total_sets: Number((summary as { total_sets?: string })?.total_sets ?? 0),
-        logged_at: new Date().toISOString(),
-      },
-    ]);
 
     res.status(201).json({ session: summary });
   }),

@@ -1,16 +1,15 @@
 # Train With Rohin
 
-A coaching app for personal trainers and their clients, with a Power BI
-analytics layer on top.
+A coaching app for personal trainers and their clients.
 
 Clients log their training, food, supplements and daily body metrics on their
 phone. The trainer works from a roster view, can log on any client's behalf, and
-gets real dashboards instead of a spreadsheet.
+gets dashboards in the app instead of a spreadsheet.
 
 ```
 mobile/     Expo + React Native (TypeScript) app — iOS and Android
 server/     Express + Postgres API, plus the vw_* analytics layer
-docs/       Power BI connection guide
+docs/       setup and install guides
 ```
 
 ## The four modules
@@ -105,25 +104,22 @@ Clients can only ever read and write their own rows. Trainers act on a client by
 passing that client's id, which is checked against their roster on every
 request. Every module screen shows the trainer which client they're logging for.
 
-## Power BI
+## Dashboards
 
-Reporting reads from a set of `vw_*` views rather than the base tables, so the
-physical schema can change without breaking published reports. Every fact view
-carries `client_id`, `trainer_id` and a `date_key`.
+Reporting lives in the app. The home screen shows the last 30 days: sessions and
+tonnage, average calories and protein, supplement adherence, latest weight, plus
+a weight trend against its 7-day average, weekly training volume, volume by
+muscle group, calories against target, and which advanced techniques were used.
 
-Three connection paths, covered in [docs/powerbi-setup.md](docs/powerbi-setup.md):
+The numbers come from a set of `vw_*` views rather than ad-hoc queries, so the
+rollup logic is defined once in `002_analytics_views.sql` and every endpoint
+reads the same definitions. Each fact view carries `client_id`, `trainer_id` and
+a `date_key`, so a new dashboard is usually a `GROUP BY` away rather than new
+plumbing.
 
-- **DirectQuery** to Postgres via a least-privilege `powerbi_reader` role — the
-  default, and near-realtime.
-- **Streaming datasets** for tiles that update the moment something is logged.
-  Best-effort: the row is committed to Postgres first, so a push failure is
-  logged and ignored.
-- **JSON feed** at `/api/powerbi/:view` for when the database isn't reachable
-  from the Power BI service. Allowlisted views only, API-key authenticated,
-  with pagination and date bounds for incremental refresh.
-
-The guide includes the model relationships, the date-table setup, and starter
-DAX for volume, estimated 1RM, macro adherence and weight change.
+`GET /api/analytics/overview?days=N` returns everything the home screen needs in
+one payload; `GET /api/analytics/personal-records` returns the best estimated
+1RM per exercise.
 
 ## API
 
@@ -140,8 +136,7 @@ DAX for volume, estimated 1RM, macro adherence and weight change.
 | `PUT /api/diet/targets` | trainer sets macro goals |
 | `GET/POST /api/supplements/catalog` · `/protocol` · `/log` | supplementation |
 | `GET/PUT /api/daily-log` | daily metrics and body measurements |
-| `GET /api/analytics/overview` · `/personal-records` | in-app dashboard |
-| `GET /api/powerbi/:view` | read-only analytics feed |
+| `GET /api/analytics/overview` · `/personal-records` | dashboard data |
 
 ## Notes and limitations
 
@@ -151,8 +146,7 @@ DAX for volume, estimated 1RM, macro adherence and weight change.
 - There is no offline queue. Logging a set requires connectivity; a gym with no
   signal will fail the write rather than sync it later.
 - Row-level security is not enabled in Postgres. Authorization is enforced in the
-  API, and every fact view carries `trainer_id` so RLS can be layered on if
-  multiple trainers ever share one Power BI workspace.
+  API, and every fact view carries `trainer_id` so RLS can be layered on later.
 - The seeded food and supplement catalogs are small starter sets, not a
   nutritional database.
 

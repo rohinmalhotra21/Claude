@@ -4,8 +4,8 @@ import Svg, { Circle, Path, Line as SvgLine } from 'react-native-svg';
 import { colors, radius, spacing, typography } from '../lib/theme';
 
 /**
- * Small, dependency-light charts for the in-app summary. Deep analysis lives in
- * Power BI; these exist so the phone can answer "how am I doing" at a glance.
+ * Small, dependency-light charts for the in-app dashboards. Sized to answer
+ * "how am I doing" at a glance on a phone rather than to be pored over.
  */
 
 const CHART_HEIGHT = 120;

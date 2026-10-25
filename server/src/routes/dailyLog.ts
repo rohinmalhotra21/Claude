@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { query, queryOne, transaction } from '../db/pool.js';
 import { ApiError, asyncHandler } from '../middleware/error.js';
 import { authenticate, resolveTargetUserId } from '../middleware/auth.js';
-import { pushAsync } from '../services/powerbiPush.js';
 
 export const dailyLogRouter = Router();
 dailyLogRouter.use(authenticate);
@@ -156,32 +155,6 @@ dailyLogRouter.put(
 
       return logId;
     });
-
-    const enriched = await queryOne<{
-      client_name: string;
-      weight_kg: string | null;
-      weight_kg_7d_avg: string | null;
-      body_fat_pct: string | null;
-    }>(
-      `SELECT client_name, weight_kg, weight_kg_7d_avg, body_fat_pct
-       FROM vw_fact_daily_log WHERE client_id = $1 AND date_key = $2`,
-      [userId, body.loggedOn],
-    );
-
-    if (enriched) {
-      pushAsync('dailyLog', [
-        {
-          client_id: userId,
-          client_name: enriched.client_name,
-          date: body.loggedOn,
-          weight_kg: enriched.weight_kg === null ? null : Number(enriched.weight_kg),
-          weight_kg_7d_avg:
-            enriched.weight_kg_7d_avg === null ? null : Number(enriched.weight_kg_7d_avg),
-          body_fat_pct: enriched.body_fat_pct === null ? null : Number(enriched.body_fat_pct),
-          logged_at: new Date().toISOString(),
-        },
-      ]);
-    }
 
     res.json({ id: log, ok: true });
   }),

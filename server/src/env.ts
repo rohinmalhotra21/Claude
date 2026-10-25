@@ -22,16 +22,4 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '30d',
   corsOrigins: (process.env.CORS_ORIGINS ?? '*').split(',').map((s) => s.trim()),
 
-  // Optional: Power BI streaming datasets for live tiles. When these are unset
-  // the push service quietly no-ops and DirectQuery remains the only path.
-  powerBi: {
-    pushUrls: {
-      workouts: process.env.POWERBI_PUSH_URL_WORKOUTS ?? '',
-      nutrition: process.env.POWERBI_PUSH_URL_NUTRITION ?? '',
-      supplements: process.env.POWERBI_PUSH_URL_SUPPLEMENTS ?? '',
-      dailyLog: process.env.POWERBI_PUSH_URL_DAILY_LOG ?? '',
-    },
-  },
 } as const;
-
-export type PushStream = keyof typeof env.powerBi.pushUrls;

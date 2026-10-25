@@ -1,5 +1,5 @@
 -- Train With Rohin schema
--- Postgres 14+. Designed so Power BI can DirectQuery the vw_* views directly.
+-- Postgres 14+. Reporting reads the vw_* views defined in 002.
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 

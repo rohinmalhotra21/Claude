@@ -8,9 +8,8 @@ export const analyticsRouter = Router();
 analyticsRouter.use(authenticate);
 
 /**
- * The numbers behind the app's own home screen. Power BI reads the same views
- * directly; this endpoint exists so the phone doesn't need to embed a report
- * just to show a handful of tiles.
+ * The numbers behind the app's dashboards. Each query reads the vw_* views so
+ * the rollup logic lives in the database rather than being restated here.
  */
 analyticsRouter.get(
   '/overview',

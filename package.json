@@ -2,7 +2,7 @@
   "name": "train-with-rohin",
   "version": "1.0.0",
   "private": true,
-  "description": "Coaching app for personal trainers and their clients, with a Power BI analytics layer",
+  "description": "Coaching app for personal trainers and their clients",
   "scripts": {
     "setup": "./setup.sh",
     "dev": "./dev.sh",

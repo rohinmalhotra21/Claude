@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { query, queryOne } from '../db/pool.js';
 import { ApiError, asyncHandler } from '../middleware/error.js';
 import { authenticate, resolveTargetUserId } from '../middleware/auth.js';
-import { pushAsync } from '../services/powerbiPush.js';
 
 export const supplementsRouter = Router();
 supplementsRouter.use(authenticate);
@@ -231,16 +230,6 @@ supplementsRouter.post(
         body.timeOfDay ?? null,
       ],
     );
-
-    pushAsync('supplements', [
-      {
-        client_id: userId,
-        supplement_name: supplement.name,
-        date: body.takenOn,
-        servings: body.servings,
-        logged_at: new Date().toISOString(),
-      },
-    ]);
 
     res.status(201).json({ entry });
   }),
