@@ -41,6 +41,17 @@ jobs:
         working-directory: mobile
         run: npm ci
 
+      - name: Check the API URL is set
+        run: |
+          if [ -z "${{ vars.API_URL }}" ]; then
+            echo "::warning title=No API_URL::The site will build and render, but every \
+          request will fail: the app falls back to localhost. Set the API_URL \
+          repository variable (Settings - Secrets and variables - Actions - Variables) \
+          and re-run this workflow."
+          else
+            echo "Building against ${{ vars.API_URL }}"
+          fi
+
       - name: Export web build
         working-directory: mobile
         env:

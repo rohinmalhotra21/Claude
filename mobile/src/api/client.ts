@@ -20,6 +20,27 @@ function resolveBaseUrl(): string {
 
 export const API_BASE_URL = resolveBaseUrl();
 
+/**
+ * True when the build fell back to localhost while being served from a real
+ * domain — i.e. it was deployed without EXPO_PUBLIC_API_URL set. Worth telling
+ * apart from a server that is merely down, because the fix is a rebuild, not
+ * starting something.
+ */
+const isMisconfiguredDeploy =
+  API_BASE_URL.includes('localhost') &&
+  typeof globalThis !== 'undefined' &&
+  typeof (globalThis as { location?: { hostname?: string } }).location?.hostname === 'string' &&
+  !['localhost', '127.0.0.1', ''].includes(
+    (globalThis as { location?: { hostname?: string } }).location!.hostname!,
+  );
+
+function unreachableMessage(): string {
+  return isMisconfiguredDeploy
+    ? 'This build has no API address baked in, so it is pointing at localhost. ' +
+        'Set the API_URL variable and redeploy.'
+    : `Can't reach the server at ${API_BASE_URL}. Is it running?`;
+}
+
 const TOKEN_KEY = 'twr.token';
 
 let cachedToken: string | null = null;
@@ -77,7 +98,7 @@ export async function api<T = unknown>(path: string, options: RequestOptions = {
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
-    throw new ApiError(0, `Can't reach the server at ${API_BASE_URL}. Is it running?`);
+    throw new ApiError(0, unreachableMessage());
   }
 
   if (response.status === 204) return undefined as T;
