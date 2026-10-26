@@ -7,7 +7,8 @@ services:
     rootDir: server
     plan: free
     buildCommand: npm install && npm run build
-    startCommand: npm run migrate:prod && npm start
+    # Seeding is guarded by SEED_IF_EMPTY, so restarts do not wipe logged data.
+    startCommand: npm run migrate:prod && npm run seed:prod && npm start
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
@@ -20,6 +21,10 @@ services:
         value: '*'
       - key: NODE_VERSION
         value: '20'
+      # Load the demo trainer, two clients and eight weeks of history on a
+      # first boot only. Set to false once real clients are using it.
+      - key: SEED_IF_EMPTY
+        value: 'true'
 
 databases:
   - name: trainwithrohin-db

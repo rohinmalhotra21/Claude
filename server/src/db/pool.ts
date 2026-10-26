@@ -1,11 +1,26 @@
 import { Pool, type PoolClient, type QueryResultRow } from 'pg';
 import { env } from '../env.js';
 
+/**
+ * Managed Postgres (Render, Fly, Neon …) requires TLS, so production defaults
+ * to it. `sslmode=disable` in the URL, or PGSSLMODE=disable, opts out — needed
+ * for a self-hosted database on a private network, or for running a production
+ * build against a local server.
+ */
+function sslConfig(): { rejectUnauthorized: boolean } | undefined {
+  const disabled =
+    /[?&]sslmode=disable\b/.test(env.databaseUrl) || process.env.PGSSLMODE === 'disable';
+  if (disabled) return undefined;
+  // Managed providers terminate TLS with certificates this process has no
+  // chain for, so verification is off while encryption stays on.
+  return env.isProduction ? { rejectUnauthorized: false } : undefined;
+}
+
 export const pool = new Pool({
   connectionString: env.databaseUrl,
   max: 10,
   idleTimeoutMillis: 30_000,
-  ssl: env.isProduction ? { rejectUnauthorized: false } : undefined,
+  ssl: sslConfig(),
 });
 
 export async function query<T extends QueryResultRow = QueryResultRow>(

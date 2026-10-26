@@ -6,7 +6,7 @@
  */
 import bcrypt from 'bcryptjs';
 import { randomUUID } from 'node:crypto';
-import { pool, transaction } from './pool.js';
+import { pool, query, transaction } from './pool.js';
 
 const EXERCISES: [name: string, muscle: string, equipment: string][] = [
   ['Barbell Back Squat', 'Legs', 'Barbell'],
@@ -92,7 +92,24 @@ function isoDate(daysAgo: number): string {
 
 const DAYS_OF_HISTORY = 56;
 
+/**
+ * With SEED_IF_EMPTY set, seeding is skipped once the database already holds
+ * users. The deployed API runs this on every boot, and free hosts restart
+ * often — without the guard, each restart would wipe whatever the demo
+ * accounts had logged since.
+ */
+async function alreadyPopulated(): Promise<boolean> {
+  if (process.env.SEED_IF_EMPTY !== 'true') return false;
+  const rows = await query<{ count: string }>('SELECT count(*)::text AS count FROM users');
+  return Number(rows[0]?.count ?? 0) > 0;
+}
+
 async function seed(): Promise<void> {
+  if (await alreadyPopulated()) {
+    console.log('Database already has users; skipping seed.');
+    return;
+  }
+
   await transaction(async (db) => {
     const hash = await bcrypt.hash('password123', 12);
 

@@ -13,7 +13,8 @@
     "seed": "tsx src/db/seed.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --test --import tsx test/*.test.ts",
-    "migrate:prod": "node dist/db/migrate.js"
+    "migrate:prod": "node dist/db/migrate.js",
+    "seed:prod": "node dist/db/seed.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
